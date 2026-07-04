@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] — 2026-07-04
+
+Correctness release: no API or behavior changes.
+
+### Fixed
+
+- Corrected the declared MSRV. `rust-version` was `1.74`, but the resolved dependency tree requires
+  a newer toolchain — `clap` and `getrandom 0.4` use edition 2024 (rustc ≥ 1.85), and the `icu_*`
+  crates (via `ureq → url → idna`) declare a floor of **1.86**. Bumped `rust-version` to `1.86`
+  across the workspace and the standalone playground, so an older toolchain now gets a clear
+  "requires rustc 1.86" error instead of a confusing edition-2024 failure in a transitive dependency.
+
+### Added
+
+- A CI `msrv` job that builds the workspace (all features) on exactly Rust 1.86, so the MSRV claim is
+  verified on every push and cannot silently drift as dependencies bump.
+
 ## [0.1.0] — 2026-07-04
 
 The first release of **FtrIO**, attribute-based feature toggles for Rust. A faithful port of the
@@ -79,4 +96,5 @@ fn send_welcome_email() {
 
 See [`PORTING_NOTES.md`](PORTING_NOTES.md) for how each .NET mechanism maps to Rust.
 
+[0.1.1]: https://github.com/FtrOnOff/ftrio-rust/releases/tag/v0.1.1
 [0.1.0]: https://github.com/FtrOnOff/ftrio-rust/releases/tag/v0.1.0
