@@ -21,7 +21,7 @@ exclude = [
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/FtrOnOff/FtrIO"
+repository = "https://github.com/FtrOnOff/ftrio-rust"
 rust-version = "1.74"
 
 [workspace.dependencies]

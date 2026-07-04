@@ -6,6 +6,7 @@ license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
 description = "Procedural attribute macros for FtrIO: #[toggle] and #[toggle_async]."
+readme = "../README.md"
 keywords = ["feature-toggle", "attribute", "macro", "proc-macro", "toggle"]
 categories = ["development-tools"]
 
