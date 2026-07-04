@@ -1,4 +1,4 @@
-//! Per-user overrides win unconditionally, before any strategy — but only with a user context.
+//! Per-user overrides win unconditionally, before any strategy, but only with a user context.
 
 mod common;
 

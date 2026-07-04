@@ -24,7 +24,7 @@ pub struct AppSettings {
 
 impl AppSettings {
     /// Load the base file and (optionally) the environment overlay, merging them so the overlay
-    /// wins — the two-source model `IConfiguration` uses. If neither file exists, `present()` is
+    /// wins, the two-source model `IConfiguration` uses. If neither file exists, `present()` is
     /// `false`, which drives the offline-safe default.
     pub fn load(base_file: &Path, environment: Option<&str>) -> Self {
         let mut root = Value::Object(Map::new());

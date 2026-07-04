@@ -1,4 +1,4 @@
-//! A/B determinism — the pinned cross-language vectors, lifted verbatim from
+//! A/B determinism, the pinned cross-language vectors, lifted verbatim from
 //! `ftrio-python/tests/unit/test_ab_determinism.py`. The same `user:key[:salt]` must produce the
 //! same bucket the .NET and Python runtimes produce.
 

@@ -1,6 +1,6 @@
 //! HTTP toggle provider (feature `http`).
 //!
-//! Fetches the exact `appsettings.json` shape from a URL — the cross-language wire contract — and
+//! Fetches the exact `appsettings.json` shape from a URL, the cross-language wire contract, and
 //! serves it as a [`ToggleValueProvider`]. Mirrors the .NET `Providers.Http` project.
 
 use super::ToggleValueProvider;
@@ -16,7 +16,7 @@ impl HttpToggleParser {
     /// Fetch the config snapshot from `url`. The response body must be the `appsettings.json` shape
     /// (`FtrIO` / `Toggles` / `TogglesOverrides`).
     ///
-    /// Returns a boxed error on a network/parse failure — those are not toggle-resolution errors, so
+    /// Returns a boxed error on a network/parse failure, those are not toggle-resolution errors, so
     /// they are kept out of [`ToggleError`], which stays a faithful three-variant analogue of the
     /// .NET exception trio.
     pub fn fetch(url: &str) -> Result<Self, Box<dyn std::error::Error>> {

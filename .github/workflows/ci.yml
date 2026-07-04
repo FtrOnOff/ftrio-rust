@@ -29,7 +29,7 @@ jobs:
 
   # Verify the declared MSRV is real: build on exactly the toolchain the manifests claim, with every
   # feature enabled (http/azure pull the heaviest deps). If a dependency bump raises the floor, this
-  # job fails and the rust-version must be bumped to match — so the claim can never silently rot.
+  # job fails and the rust-version must be bumped to match, so the claim can never silently rot.
   msrv:
     runs-on: ubuntu-latest
     steps:

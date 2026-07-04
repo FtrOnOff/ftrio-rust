@@ -1,4 +1,4 @@
-//! The six decision strategies — the behavioural heart of FtrIO.
+//! The six decision strategies, the behavioural heart of FtrIO.
 //!
 //! A raw configuration value is routed through an ordered chain; the first strategy whose
 //! [`ToggleDecisionStrategy::can_handle`] returns `true` decides the outcome. [`BooleanStrategy`] is

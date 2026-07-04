@@ -33,7 +33,7 @@ impl StrategyToggleParser {
     /// Construct from a source, a chain of strategies, and an optional context accessor.
     ///
     /// [`BooleanStrategy`] is appended to the chain here so it is *always* the last fallback,
-    /// regardless of how the chain was assembled — the single guarantee the FtrIO contract makes
+    /// regardless of how the chain was assembled, the single guarantee the FtrIO contract makes
     /// about the strategy order.
     pub fn new(
         source: Box<dyn ToggleValueProvider>,

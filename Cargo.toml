@@ -1,7 +1,7 @@
 # Cargo workspace manifest for the FtrIO Rust port.
 #
 # The workspace is the *shippable* product: the core library (`ftrio`), its proc-macro crate
-# (`ftrio-macros`), and the `ftrio` CLI — the crates published to crates.io.
+# (`ftrio-macros`), and the `ftrio` CLI, the crates published to crates.io.
 #
 # `ftrio-playground` is intentionally NOT a member: it is a standalone, educational crate (its own
 # workspace root, `publish = false`) that consumes `ftrio` the way a real user would. It is listed

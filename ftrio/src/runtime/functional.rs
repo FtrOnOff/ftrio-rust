@@ -1,11 +1,11 @@
-//! The explicit functional API — the `FeatureToggle<T>` analogue.
+//! The explicit functional API, the `FeatureToggle<T>` analogue.
 //!
 //! `execute_if_toggle_on(closure, key)` runs the closure only when the toggle is on, otherwise
 //! returns `T::default()`. The `try_*` forms surface the `Result` for callers who want to handle a
 //! misconfiguration instead of panicking.
 //!
 //! **Honest divergence:** a Rust closure has no name, so the ".NET derives the key from the method
-//! name" branch has no analogue here — the functional API *requires* an explicit key. Name
+//! name" branch has no analogue here, the functional API *requires* an explicit key. Name
 //! derivation lives entirely in the `#[toggle]` macro, where the function name is available at
 //! expansion time. Recorded in `PORTING_NOTES.md`.
 

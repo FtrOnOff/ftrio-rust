@@ -3,7 +3,7 @@
 # The GIT TAG is the source of truth for the version. Cargo itself only reads the version from
 # Cargo.toml, so this workflow derives the version from the tag (e.g. `v0.1.0` -> `0.1.0`) and writes
 # it into the manifests before publishing. That keeps the published version and the tag from ever
-# falling out of sync — you bump the version by tagging, nothing else.
+# falling out of sync, you bump the version by tagging, nothing else.
 #
 # Trigger: push a version tag, e.g. `git tag v0.1.0 && git push origin v0.1.0`.
 #          (Or run manually from the Actions tab and supply the version input.)

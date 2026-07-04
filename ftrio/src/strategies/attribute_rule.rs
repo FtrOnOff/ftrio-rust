@@ -10,7 +10,7 @@ const ATTRIBUTE_PREFIX: &str = "attribute:";
 /// Supported operators: `equals`, `notEquals`, `startsWith`, `endsWith`, `contains`, `in`, `notIn`
 /// (the last two take a comma-separated list). All comparison is case-insensitive. When the
 /// attribute is absent from the context, the negative operators (`notEquals`, `notIn`) hold and the
-/// rest do not — the logically consistent reading of "the attribute is not X".
+/// rest do not, the logically consistent reading of "the attribute is not X".
 #[derive(Debug, Default, Clone, Copy)]
 pub struct AttributeRuleStrategy;
 

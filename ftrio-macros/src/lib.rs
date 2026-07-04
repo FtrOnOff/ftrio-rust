@@ -2,8 +2,8 @@
 //!
 //! Rust has no runtime reflection or IL weaving, but it has procedural attribute macros, which are
 //! compile-time code transformation. This is the *closest* analogue of the .NET AspectInjector
-//! `[Toggle]`/`[ToggleAsync]` attributes of any target language — closer than Python's runtime
-//! decorator — so the "attribute-based toggle is a must" requirement is met natively rather than by
+//! `[Toggle]`/`[ToggleAsync]` attributes of any target language, closer than Python's runtime
+//! decorator, so the "attribute-based toggle is a must" requirement is met natively rather than by
 //! substitution.
 //!
 //! `#[toggle]` wraps the original function body so it only runs when the toggle is on, and otherwise

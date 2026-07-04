@@ -1,6 +1,6 @@
 # FtrIO (Rust)
 
-Attribute-based feature toggles for Rust — a faithful port of the .NET
+Attribute-based feature toggles for Rust, a faithful port of the .NET
 [FtrIO](https://github.com/FtrOnOff/FtrIO) library, with the
 [Python port](https://github.com/FtrOnOff/ftrio-python) as a second reference.
 
@@ -30,7 +30,7 @@ fn send_welcome_email() {
 }
 ```
 
-With **no `appsettings.json` on disk at all**, every toggle defaults to **on** — the offline-safe
+With **no `appsettings.json` on disk at all**, every toggle defaults to **on**, the offline-safe
 default, so a service always runs.
 
 ## Installation
@@ -48,7 +48,7 @@ cargo add ftrio --features azure   # AzureAppConfigToggleParser
 
 ## The attribute
 
-`#[toggle]` and `#[toggle_async]` are procedural attribute macros — compile-time code
+`#[toggle]` and `#[toggle_async]` are procedural attribute macros, compile-time code
 transformation, the closest analogue of the .NET AspectInjector attribute of any target language.
 
 ```rust
@@ -68,7 +68,7 @@ async fn refresh_cache() -> usize {
 
 Because the off-path returns `Default::default()`, **a gated function's return type must implement
 `Default`** (`()`, `Option<T>`, integers, `String`, etc.). A misconfiguration (missing key,
-unparseable value) panics out of the decorated function — the same way the .NET woven aspect throws.
+unparseable value) panics out of the decorated function, the same way the .NET woven aspect throws.
 The `ftrio lint` step is there to catch that at build time.
 
 ## The builder pipeline
@@ -109,10 +109,10 @@ always last.
 
 ## Providers and the buffer model
 
-- `AppSettingsToggleParser` — the `appsettings.json` file reader.
-- `EnvironmentVariableToggleParser` — reads `FTRIO__Toggles__<Key>`.
-- `CompositeToggleParser` — tries several sources in order, first-wins.
-- `ToggleProviderBuffer` — stages toggle writes (`Mutex<HashMap>`, last-write-wins), flushes on a
+- `AppSettingsToggleParser`, the `appsettings.json` file reader.
+- `EnvironmentVariableToggleParser`, reads `FTRIO__Toggles__<Key>`.
+- `CompositeToggleParser`, tries several sources in order, first-wins.
+- `ToggleProviderBuffer`, stages toggle writes (`Mutex<HashMap>`, last-write-wins), flushes on a
   background interval thread with an atomic temp-file-plus-rename, and performs a **final flush on
   `Drop`**.
 
@@ -152,7 +152,7 @@ cargo run -- --no-config # offline-safe default: everything on (one-shot)
 
 It ships its own `appsettings.json` next to the code (with `ReloadOnChange` on, so you can edit it
 live) and prints, for each gated function, the key, its raw value, the resolved decision, and the
-context used — then runs (or skips) the decorated body.
+context used, then runs (or skips) the decorated body.
 
 ## Development
 

@@ -117,7 +117,7 @@ impl Drop for ToggleProviderBuffer {
         if let Some(worker) = self.worker.take() {
             let _ = worker.join();
         }
-        // Final flush on drop — the `IDisposable`/`Dispose` analogue.
+        // Final flush on drop, the `IDisposable`/`Dispose` analogue.
         let _ = self.flush_staged();
     }
 }

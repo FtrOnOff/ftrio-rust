@@ -19,7 +19,7 @@ use crate::strategies::{
     ToggleDecisionStrategy, UserTargetingStrategy,
 };
 
-/// Building a parser with overrides but no context accessor is invalid — the Rust analogue of the
+/// Building a parser with overrides but no context accessor is invalid, the Rust analogue of the
 /// .NET `InvalidOperationException`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ToggleParserBuilderError {
@@ -108,7 +108,7 @@ impl ToggleParserBuilder {
 
     /// Assemble the [`StrategyToggleParser`].
     ///
-    /// Fails if overrides were requested without a context accessor — the
+    /// Fails if overrides were requested without a context accessor, the
     /// `InvalidOperationException` analogue.
     pub fn build(self) -> Result<StrategyToggleParser, ToggleParserBuilderError> {
         if self.overrides_requested && self.context_accessor.is_none() {

@@ -1,6 +1,6 @@
 //! Per-user override resolution.
 //!
-//! Mirrors `OverrideResolver`. Overrides win **unconditionally**, before any strategy runs — but
+//! Mirrors `OverrideResolver`. Overrides win **unconditionally**, before any strategy runs, but
 //! only when there is a user context to key them by. With no context accessor (or no current user),
 //! overrides are silently ignored and evaluation falls through to the strategy chain.
 

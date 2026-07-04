@@ -2,7 +2,7 @@
 //!
 //! Like the .NET `PlaygroundConsole` and the Python `playground`, this runs an **infinite loop** with
 //! a 2-second delay, printing one block per iteration: the current (cycling) user context, then every
-//! `#[toggle]`-gated function with its raw config value, resolved decision, and the context used —
+//! `#[toggle]`-gated function with its raw config value, resolved decision, and the context used,
 //! and it lets you watch the decorated body run or be skipped. `ReloadOnChange` is on, so you can
 //! **edit `appsettings.json` live** and watch the decisions change on the next tick. Ctrl+C to exit.
 //!
@@ -298,7 +298,7 @@ fn run_offline_demo() {
     toggle_parser_provider::configure(Arc::new(parser));
 
     println!("FtrIO Rust playground (offline: no appsettings.json present)");
-    println!("Every toggle defaults to ON. `plain_off` — normally false — now runs:\n");
+    println!("Every toggle defaults to ON. `plain_off`, normally false, now runs:\n");
     plain_off();
     println!(
         "\n(decision for plain_off: {})",
@@ -310,7 +310,7 @@ fn run_offline_demo() {
 type RawValues = std::collections::HashMap<String, String>;
 
 /// Load the `Toggles` section as raw display strings, straight from the file (independent of the
-/// parser) so the viewer sees exactly what is on disk — re-read each tick so live edits show up.
+/// parser) so the viewer sees exactly what is on disk, re-read each tick so live edits show up.
 fn load_raw_toggle_values(path: &Path) -> RawValues {
     let mut map = RawValues::new();
     let Ok(contents) = std::fs::read_to_string(path) else {

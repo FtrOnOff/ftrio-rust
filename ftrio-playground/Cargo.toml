@@ -1,4 +1,4 @@
-# Standalone, educational crate — NOT part of the shippable workspace and never published.
+# Standalone, educational crate, NOT part of the shippable workspace and never published.
 #
 # It consumes `ftrio` via a path dependency the way a real user would (swap the path for a
 # `version = "..."` once `ftrio` is on crates.io). The empty `[workspace]` table below makes this

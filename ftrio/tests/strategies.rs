@@ -99,7 +99,7 @@ fn attribute_rules_cover_every_operator() {
 #[test]
 fn boolean_strategy_is_always_the_last_fallback() {
     // A parser assembled with no strategies still resolves plain booleans, because BooleanStrategy
-    // is always appended last — and a value no strategy can handle surfaces ParsedOutOfRange.
+    // is always appended last, and a value no strategy can handle surfaces ParsedOutOfRange.
     let source = MapProvider::new()
         .with_value("plain_true", "true")
         .with_value("plain_zero", "0")

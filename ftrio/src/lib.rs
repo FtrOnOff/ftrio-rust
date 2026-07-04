@@ -1,11 +1,11 @@
 //! # FtrIO (Rust)
 //!
-//! Attribute-based feature toggles for Rust — a faithful port of the .NET
+//! Attribute-based feature toggles for Rust, a faithful port of the .NET
 //! [FtrIO](https://github.com/FtrOnOff/FtrIO) library, using the
 //! [Python port](https://github.com/FtrOnOff/ftrio-python) as a second reference.
 //!
 //! The centrepiece is the `#[toggle]` attribute. Rust has no runtime reflection or IL weaving, but
-//! it has procedural attribute macros — compile-time code transformation, the *closest* analogue of
+//! it has procedural attribute macros, compile-time code transformation, the *closest* analogue of
 //! the .NET AspectInjector attribute of any target language. Decorate a function and it runs only
 //! when its toggle is on; otherwise it returns `Default::default()`.
 //!
@@ -18,12 +18,12 @@
 //! }
 //! ```
 //!
-//! With no `appsettings.json` on disk at all, every toggle defaults to **on** — the offline-safe
+//! With no `appsettings.json` on disk at all, every toggle defaults to **on**, the offline-safe
 //! default. See [`toggle_parser_provider`] for how the ambient parser is resolved and configured,
 //! and [`ToggleParserBuilder`] for assembling a custom strategy chain.
 
 // The attribute macros, re-exported so consumers depend on a single crate and write `use
-// ftrio::toggle;` — mirroring how the .NET package flows its AspectInjector weaver transitively.
+// ftrio::toggle;`, mirroring how the .NET package flows its AspectInjector weaver transitively.
 pub use ftrio_macros::{toggle, toggle_async};
 
 // Internal module tree, grouped by responsibility. The crate's public API is defined entirely by the

@@ -24,7 +24,7 @@ Additional named components kept from the source: `OverrideResolver`, `StrategyT
 
 This is the **closest analogue of the three ports**. .NET uses AspectInjector IL weaving (runtime
 code transformation); Python uses a runtime decorator (runtime wrapping); Rust uses a procedural
-attribute macro — **compile-time** code transformation. The attribute-based toggle is thus rendered
+attribute macro, **compile-time** code transformation. The attribute-based toggle is thus rendered
 *natively*, not by substitution.
 
 - **Off-path return is `Default::default()`.** The faithful equivalent of the aspect returning
@@ -32,7 +32,7 @@ attribute macro — **compile-time** code transformation. The attribute-based to
   return type must implement `Default`** (`()` for void-like fns, `None` for `Option<T>`, `0` for
   integers, etc.).
 - **Panic-on-error mapping.** `get_toggle_status` returns `Result<bool, ToggleError>`; the macro
-  `unwrap`s it, so a missing key or unparseable value panics out of the decorated function — faithful
+  `unwrap`s it, so a missing key or unparseable value panics out of the decorated function, faithful
   to the woven aspect throwing an exception out of the decorated method. Misconfiguration is a
   programmer error `ftrio lint` catches at build time, so a panic is the idiomatic and faithful
   mapping. The functional `try_*` API exposes the `Result` for callers who want to handle it.
@@ -47,7 +47,7 @@ attribute macro — **compile-time** code transformation. The attribute-based to
 
 The .NET `ToggleConfigAnalyzer` emits `FTRIO001` in-compiler (severity `Error`) when a
 `[Toggle]`-decorated method has no matching key in `Toggles`. Rust has no in-compiler hook available
-here, so — exactly as the Python port did — the intent is ported as a build-time CLI: walk `.rs`
+here, so, exactly as the Python port did, the intent is ported as a build-time CLI: walk `.rs`
 files with `syn`, resolve each `#[toggle]`/`#[toggle_async]` key, load `appsettings.json`, and report
 any decorated function whose key is missing. **Exits non-zero on findings** so CI can gate on it. The
 diagnostic id `FTRIO001` and the message intent are preserved verbatim.
@@ -78,7 +78,7 @@ constructors (`AppSettingsToggleParser::new`, `BlueGreenStrategy::new`,
 ## `IDisposable` → `Drop`
 
 `ToggleProviderBuffer` implements `Drop`, which stops the background thread and performs a **final
-flush** — the `Dispose` analogue. Providers that hold resources follow the same pattern.
+flush**, the `Dispose` analogue. Providers that hold resources follow the same pattern.
 
 ## Concurrency primitives
 
@@ -123,12 +123,12 @@ analogue. The functional API (`execute_if_toggle_on`, the async and `try_*` form
 **requires an explicit key**. Name derivation lives entirely in the `#[toggle]` macro, where the
 function name is available at expansion time.
 
-## Additive items (not in the .NET source — clearly marked)
+## Additive items (not in the .NET source, clearly marked)
 
-- `toggle_parser_provider::reset()` — test-only reset of the ambient parser, for test isolation
+- `toggle_parser_provider::reset()`, test-only reset of the ambient parser, for test isolation
   (the Python port added the same).
-- `FTRIO_ENVIRONMENT` — an additive, lowest-precedence environment alias (matching the Python port).
-- `ToggleParserBuilderError` — a dedicated builder error type for the "overrides without a context
+- `FTRIO_ENVIRONMENT`, an additive, lowest-precedence environment alias (matching the Python port).
+- `ToggleParserBuilderError`, a dedicated builder error type for the "overrides without a context
   accessor" case (the `InvalidOperationException` analogue).
 - A minimal `block_on` in the tests and playground, so `#[toggle_async]` can be demonstrated without
   pulling in an async runtime.
@@ -152,9 +152,9 @@ Python port's `ruff` / `pep8-naming` gate. See `.github/workflows/ci.yml`.
 
 ## Components intentionally not ported verbatim
 
-- **AspectInjector IL weaving** — replaced natively by the proc-macro (compile-time transformation).
-- **The Roslyn analyzer assembly** — replaced by `ftrio lint` (build-time CLI, `FTRIO001` preserved).
-- **The Azure App Configuration SDK** — the `azure` provider is a faithful-substitute stub built from
+- **AspectInjector IL weaving**, replaced natively by the proc-macro (compile-time transformation).
+- **The Roslyn analyzer assembly**, replaced by `ftrio lint` (build-time CLI, `FTRIO001` preserved).
+- **The Azure App Configuration SDK**, the `azure` provider is a faithful-substitute stub built from
   an already-materialised `appsettings.json`-shaped snapshot, to keep the core free of a heavy cloud
   SDK dependency.
 

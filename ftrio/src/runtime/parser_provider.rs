@@ -2,7 +2,7 @@
 //!
 //! Mirrors `ToggleParserProvider`: a process-wide, thread-safe, replaceable parser instance. Until
 //! configured it lazily builds the conventional default (a [`StrategyToggleParser`] over
-//! `appsettings.json`), so the attribute works out of the box — and, with no config on disk, still
+//! `appsettings.json`), so the attribute works out of the box, and, with no config on disk, still
 //! defaults every toggle to on.
 
 use std::sync::{Arc, OnceLock, RwLock};

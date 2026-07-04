@@ -177,7 +177,7 @@ fn markdown_report(present: &[(String, String)], missing: &[String]) -> String {
         body.push_str(&format!("| {key} | present | {value} |\n"));
     }
     for key in missing {
-        body.push_str(&format!("| {key} | MISSING | — |\n"));
+        body.push_str(&format!("| {key} | MISSING | - |\n"));
     }
     body
 }
