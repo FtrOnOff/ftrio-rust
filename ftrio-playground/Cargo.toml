@@ -7,7 +7,7 @@
 name = "ftrio-playground"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.74"
+rust-version = "1.86"
 license = "MIT"
 description = "Runnable, educational demonstration of the FtrIO #[toggle] attribute. Not published."
 publish = false

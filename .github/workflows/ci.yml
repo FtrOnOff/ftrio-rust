@@ -26,3 +26,16 @@ jobs:
         run: cargo fmt --manifest-path ftrio-playground/Cargo.toml --check
       - name: Playground (standalone) clippy
         run: cargo clippy --manifest-path ftrio-playground/Cargo.toml --all-targets -- -D warnings -D clippy::upper_case_acronyms
+
+  # Verify the declared MSRV is real: build on exactly the toolchain the manifests claim, with every
+  # feature enabled (http/azure pull the heaviest deps). If a dependency bump raises the floor, this
+  # job fails and the rust-version must be bumped to match — so the claim can never silently rot.
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.86.0
+      - name: Build workspace on MSRV (all features)
+        run: cargo build --workspace --all-features
+      - name: Build standalone playground on MSRV
+        run: cargo build --manifest-path ftrio-playground/Cargo.toml

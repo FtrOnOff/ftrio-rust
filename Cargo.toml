@@ -22,7 +22,9 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/FtrOnOff/ftrio-rust"
-rust-version = "1.74"
+# The dependency tree (clap and the icu crates via ureq/url/idna) requires edition 2024 and a recent
+# toolchain; the true floor is 1.86, verified by the `msrv` CI job. Do not lower without checking.
+rust-version = "1.86"
 
 [workspace.dependencies]
 serde = { version = "1", features = ["derive"] }

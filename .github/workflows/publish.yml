@@ -47,6 +47,12 @@ jobs:
             echo "::error::No version: push a v* tag or supply the version input."
             exit 1
           fi
+          # Validate semver before it can reach the manifests, so a mistyped tag (e.g. `v.0.1.0`)
+          # fails here with a clear message instead of producing a broken Cargo.toml downstream.
+          if ! printf '%s' "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?$'; then
+            echo "::error::Version '$VERSION' is not valid semver. Tag like v0.1.0 (a 'v' then the number, no extra dot)."
+            exit 1
+          fi
           echo "Publishing version $VERSION"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 

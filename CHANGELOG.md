@@ -75,7 +75,7 @@ fn send_welcome_email() {
 - A misconfiguration (missing key, unparseable value) **panics** out of the decorated function — run
   `ftrio lint` in CI to catch it at build time. The `try_*` functional API returns a `Result` if
   you'd rather handle it.
-- MSRV: Rust 1.74. License: MIT.
+- MSRV: Rust 1.86 (the dependency tree requires edition 2024). License: MIT.
 
 See [`PORTING_NOTES.md`](PORTING_NOTES.md) for how each .NET mechanism maps to Rust.
 
