@@ -141,15 +141,18 @@ ftrio lint                         # FTRIO001: decorated fns with no Toggles ent
 
 ## Playground
 
-See the attribute working across every grammar:
+`ftrio-playground` is a standalone, educational crate (not part of the published workspace, never
+published). It consumes `ftrio` the way a real user would, so run it from its own directory:
 
 ```bash
-cargo run -p ftrio-playground
-cargo run -p ftrio-playground -- --no-config   # offline-safe default: everything on
+cd ftrio-playground
+cargo run                # infinite loop, cycling users every 2s; Ctrl+C to exit
+cargo run -- --no-config # offline-safe default: everything on (one-shot)
 ```
 
-It ships its own `appsettings.json` next to the code and prints, for each gated function, the key,
-its raw value, the resolved decision, and the context used — then runs (or skips) the decorated body.
+It ships its own `appsettings.json` next to the code (with `ReloadOnChange` on, so you can edit it
+live) and prints, for each gated function, the key, its raw value, the resolved decision, and the
+context used — then runs (or skips) the decorated body.
 
 ## Development
 

@@ -1,0 +1,24 @@
+# Standalone, educational crate — NOT part of the shippable workspace and never published.
+#
+# It consumes `ftrio` via a path dependency the way a real user would (swap the path for a
+# `version = "..."` once `ftrio` is on crates.io). The empty `[workspace]` table below makes this
+# crate its own workspace root, fully decoupling it from the published workspace one directory up.
+[package]
+name = "ftrio-playground"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74"
+license = "MIT"
+description = "Runnable, educational demonstration of the FtrIO #[toggle] attribute. Not published."
+publish = false
+
+[[bin]]
+name = "playground"
+path = "src/main.rs"
+
+[dependencies]
+ftrio = { path = "../ftrio" }
+serde_json = "1"
+
+# Own workspace root: this crate is intentionally independent of the shippable workspace.
+[workspace]

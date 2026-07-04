@@ -1,0 +1,38 @@
+# Cargo workspace manifest for the FtrIO Rust port.
+#
+# The workspace is the *shippable* product: the core library (`ftrio`), its proc-macro crate
+# (`ftrio-macros`), and the `ftrio` CLI — the crates published to crates.io.
+#
+# `ftrio-playground` is intentionally NOT a member: it is a standalone, educational crate (its own
+# workspace root, `publish = false`) that consumes `ftrio` the way a real user would. It is listed
+# under `exclude` so workspace-wide commands here never pull it into the published set.
+[workspace]
+resolver = "2"
+members = [
+    "ftrio",
+    "ftrio-macros",
+    "ftrio-cli",
+]
+exclude = [
+    "ftrio-playground",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/FtrOnOff/FtrIO"
+rust-version = "1.74"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+rand = "0.8"
+syn = { version = "2", features = ["full", "extra-traits"] }
+quote = "1"
+proc-macro2 = "1"
+clap = { version = "4", features = ["derive"] }
+# native-tls (SChannel on Windows) instead of the default rustls backend, so we avoid the `ring`
+# dependency, which needs clang/C-assembly tooling not present in a default MSVC install.
+ureq = { version = "2", default-features = false, features = ["native-tls", "gzip"] }

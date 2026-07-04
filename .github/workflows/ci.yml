@@ -1,0 +1,28 @@
+# CI gates: the Rust analogue of the style-guide conformance the Python port enforced with ruff.
+# rustfmt clean, clippy clean with upper_case_acronyms denied, and the full test suite green.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Format
+        run: cargo fmt --all --check
+      - name: Clippy (deny warnings, acronyms as one word)
+        run: cargo clippy --all-targets --all-features -- -D warnings -D clippy::upper_case_acronyms
+      - name: Test
+        run: cargo test --all
+      # The playground is a standalone crate excluded from the workspace, so verify it separately
+      # to keep it from rotting.
+      - name: Playground (standalone) format
+        run: cargo fmt --manifest-path ftrio-playground/Cargo.toml --check
+      - name: Playground (standalone) clippy
+        run: cargo clippy --manifest-path ftrio-playground/Cargo.toml --all-targets -- -D warnings -D clippy::upper_case_acronyms

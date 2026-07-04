@@ -1,0 +1,18 @@
+[package]
+name = "ftrio-macros"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Procedural attribute macros for FtrIO: #[toggle] and #[toggle_async]."
+keywords = ["feature-toggle", "attribute", "macro", "proc-macro", "toggle"]
+categories = ["development-tools"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn.workspace = true
+quote.workspace = true
+proc-macro2.workspace = true

@@ -1,0 +1,86 @@
+# Publish pipeline: publishes the three shippable crates to crates.io, in dependency order.
+#
+# The GIT TAG is the source of truth for the version. Cargo itself only reads the version from
+# Cargo.toml, so this workflow derives the version from the tag (e.g. `v0.1.0` -> `0.1.0`) and writes
+# it into the manifests before publishing. That keeps the published version and the tag from ever
+# falling out of sync — you bump the version by tagging, nothing else.
+#
+# Trigger: push a version tag, e.g. `git tag v0.1.0 && git push origin v0.1.0`.
+#          (Or run manually from the Actions tab and supply the version input.)
+#
+# One-time setup: add a crates.io API token as the repo secret `CARGO_REGISTRY_TOKEN`
+#   (GitHub -> Settings -> Secrets and variables -> Actions). Token: https://crates.io/settings/tokens
+#
+# The playground is excluded from the workspace, so it is never published.
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g. 0.1.0) when running manually"
+        required: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      # Derive the version: strip the leading `v` from the tag, or use the manual input.
+      - name: Determine version from tag
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          if [ -z "$VERSION" ]; then
+            echo "::error::No version: push a v* tag or supply the version input."
+            exit 1
+          fi
+          echo "Publishing version $VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      # Write the tag's version into the manifests. Every crate uses `version.workspace = true`, so
+      # the version lives in exactly two places: the root [workspace.package] version (which cascades
+      # to all members) and ftrio's pin on ftrio-macros. Both are updated here, then asserted, so a
+      # future manifest reformat can never silently publish the wrong version.
+      - name: Set version from tag
+        run: |
+          sed -E -i 's/^version = "[^"]*"/version = "'"$VERSION"'"/' Cargo.toml
+          sed -E -i 's|(ftrio-macros = \{ path = "\.\./ftrio-macros", version = )"[^"]*"|\1"'"$VERSION"'"|' ftrio/Cargo.toml
+          grep -q "^version = \"$VERSION\"" Cargo.toml \
+            || { echo "::error::workspace version was not set to $VERSION"; exit 1; }
+          grep -q "version = \"$VERSION\"" ftrio/Cargo.toml \
+            || { echo "::error::ftrio-macros pin was not set to $VERSION"; exit 1; }
+
+      # Gate the release on the same checks CI runs, against the version we are about to publish.
+      - name: Format
+        run: cargo fmt --all --check
+      - name: Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings -D clippy::upper_case_acronyms
+      - name: Test
+        run: cargo test --all
+
+      # Publish in dependency order. `--allow-dirty` because the version bump above is an uncommitted
+      # working-tree edit (the tag, not the commit, is the source of truth). Modern cargo waits for
+      # each crate to appear in the index before returning; the sleeps are a belt-and-braces fallback.
+      - name: Publish ftrio-macros
+        run: cargo publish -p ftrio-macros --allow-dirty
+      - name: Wait for index
+        run: sleep 30
+      - name: Publish ftrio
+        run: cargo publish -p ftrio --allow-dirty
+      - name: Wait for index
+        run: sleep 30
+      - name: Publish ftrio-cli
+        run: cargo publish -p ftrio-cli --allow-dirty

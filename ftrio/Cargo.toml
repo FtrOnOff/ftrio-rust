@@ -1,0 +1,29 @@
+[package]
+name = "ftrio"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Attribute-based feature toggles for Rust. A faithful port of FtrIO (.NET)."
+readme = "../README.md"
+keywords = ["feature-toggle", "feature-flag", "toggle", "attribute", "macro"]
+categories = ["config", "development-tools"]
+
+[dependencies]
+ftrio-macros = { path = "../ftrio-macros", version = "0.1.0" }
+serde_json.workspace = true
+sha2.workspace = true
+rand.workspace = true
+# Optional providers live behind features, mirroring the separate .NET provider projects.
+ureq = { workspace = true, optional = true }
+
+[features]
+default = []
+# HTTP provider: fetches the appsettings.json shape from a URL.
+http = ["dep:ureq"]
+# Azure App Configuration provider (faithful-substitute stub; see PORTING_NOTES.md).
+azure = []
+
+[dev-dependencies]
+serde_json.workspace = true
