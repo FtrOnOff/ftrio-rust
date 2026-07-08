@@ -144,12 +144,10 @@ where
         let object = current.as_object()?;
         current = match object.get(segment) {
             Some(value) => value,
-            None => {
-                object
-                    .iter()
-                    .find(|(key, _)| key.eq_ignore_ascii_case(segment))
-                    .map(|(_, value)| value)?
-            }
+            None => object
+                .iter()
+                .find(|(key, _)| key.eq_ignore_ascii_case(segment))
+                .map(|(_, value)| value)?,
         };
     }
     Some(current)
