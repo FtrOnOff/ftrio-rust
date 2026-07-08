@@ -129,13 +129,28 @@ fn deep_merge(base: &mut Value, overlay: Value) {
 }
 
 /// Walk nested objects following the given path segments.
+///
+/// Keys are matched case-insensitively, mirroring `Microsoft.Extensions.Configuration`, whose
+/// `ConfigurationKeyComparer` is `OrdinalIgnoreCase`. This is the cross-language conformance contract
+/// (see the ftrio-conformance suite, resolution case `boolean_key_case_insensitive_match`): a lookup
+/// of `newcheckout` resolves a config key `NewCheckout`. An exact match is preferred first as a fast
+/// path; only when that misses do we scan for a case-insensitive match.
 fn navigate<'a, I>(root: &'a Value, segments: I) -> Option<&'a Value>
 where
     I: IntoIterator<Item = &'a str>,
 {
     let mut current = root;
     for segment in segments {
-        current = current.as_object()?.get(segment)?;
+        let object = current.as_object()?;
+        current = match object.get(segment) {
+            Some(value) => value,
+            None => {
+                object
+                    .iter()
+                    .find(|(key, _)| key.eq_ignore_ascii_case(segment))
+                    .map(|(_, value)| value)?
+            }
+        };
     }
     Some(current)
 }

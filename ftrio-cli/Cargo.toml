@@ -15,6 +15,7 @@ name = "ftrio"
 path = "src/main.rs"
 
 [dependencies]
+ftrio = { path = "../ftrio" }
 clap.workspace = true
 serde_json.workspace = true
 ureq.workspace = true

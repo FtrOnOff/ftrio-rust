@@ -3,6 +3,7 @@
 //! Where the .NET/Python scanners use Roslyn/`ast`, the Rust scanner parses `.rs` files with `syn`.
 
 mod appconfig;
+mod conformance;
 mod export;
 mod lint;
 mod release;
@@ -44,6 +45,10 @@ enum Command {
     ReleaseCheck(ReleaseArgs),
     /// Report `#[toggle]` functions whose key is missing from `appsettings.json` (FTRIO001).
     Lint(LintArgs),
+    /// Resolve one conformance case read as JSON on stdin, printing the outcome as JSON. Hidden: it
+    /// is the hook the ftrio-conformance cross-port driver drives, not a user-facing command.
+    #[command(name = "conformance-resolve", hide = true)]
+    ConformanceResolve,
 }
 
 #[derive(Args)]
@@ -124,6 +129,7 @@ fn main() {
             path: args.path.unwrap_or_else(current_dir_or_dot),
             verbose: args.verbose,
         }),
+        Some(Command::ConformanceResolve) => conformance::run(),
         None => {
             let source = cli.report.source.unwrap_or_else(current_dir_or_dot);
             report::run(ReportOptions {
