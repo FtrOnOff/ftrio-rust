@@ -4,6 +4,24 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2], 2026-07-08
+
+Cross-port conformance and a config-lookup correctness fix.
+
+### Changed
+
+- Config keys now match case-insensitively, mirroring .NET's `Microsoft.Extensions.Configuration`
+  (`OrdinalIgnoreCase`). A lookup of `newcheckout` resolves a config key written `NewCheckout`, and
+  colon paths like `FtrIO:BlueGreen:CurrentSlot` match regardless of case; an exact match is tried
+  first as a fast path. Brings the Rust port in line with the .NET and Python runtimes.
+
+### Added
+
+- Hidden `ftrio conformance-resolve` subcommand: the per-port hook for the language-agnostic
+  `ftrio-conformance` suite. It reads one resolution case as JSON on stdin, runs it through the real
+  resolution path, and prints `{"result": true|false}` or `{"error": "..."}`, so a cross-port driver
+  can build a parity matrix across the Rust, .NET, and Python runtimes.
+
 ## [0.1.1], 2026-07-04
 
 Correctness release: no API or behavior changes.
@@ -96,5 +114,6 @@ fn send_welcome_email() {
 
 See [`PORTING_NOTES.md`](PORTING_NOTES.md) for how each .NET mechanism maps to Rust.
 
+[0.1.2]: https://github.com/FtrOnOff/ftrio-rust/releases/tag/v0.1.2
 [0.1.1]: https://github.com/FtrOnOff/ftrio-rust/releases/tag/v0.1.1
 [0.1.0]: https://github.com/FtrOnOff/ftrio-rust/releases/tag/v0.1.0
