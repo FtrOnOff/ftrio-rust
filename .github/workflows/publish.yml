@@ -57,17 +57,21 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       # Write the tag's version into the manifests. Every crate uses `version.workspace = true`, so
-      # the version lives in exactly two places: the root [workspace.package] version (which cascades
-      # to all members) and ftrio's pin on ftrio-macros. Both are updated here, then asserted, so a
-      # future manifest reformat can never silently publish the wrong version.
+      # the version cascades from the root [workspace.package] version to all members. The two
+      # intra-workspace dependency pins that also carry a version (ftrio's pin on ftrio-macros, and
+      # ftrio-cli's pin on ftrio) are updated to match. Each edit is asserted, so a future manifest
+      # reformat can never silently publish the wrong version.
       - name: Set version from tag
         run: |
           sed -E -i 's/^version = "[^"]*"/version = "'"$VERSION"'"/' Cargo.toml
           sed -E -i 's|(ftrio-macros = \{ path = "\.\./ftrio-macros", version = )"[^"]*"|\1"'"$VERSION"'"|' ftrio/Cargo.toml
+          sed -E -i 's|(ftrio = \{ path = "\.\./ftrio", version = )"[^"]*"|\1"'"$VERSION"'"|' ftrio-cli/Cargo.toml
           grep -q "^version = \"$VERSION\"" Cargo.toml \
             || { echo "::error::workspace version was not set to $VERSION"; exit 1; }
           grep -q "version = \"$VERSION\"" ftrio/Cargo.toml \
             || { echo "::error::ftrio-macros pin was not set to $VERSION"; exit 1; }
+          grep -q "version = \"$VERSION\"" ftrio-cli/Cargo.toml \
+            || { echo "::error::ftrio pin in ftrio-cli was not set to $VERSION"; exit 1; }
 
       # Gate the release on the same checks CI runs, against the version we are about to publish.
       - name: Format
@@ -77,16 +81,28 @@ jobs:
       - name: Test
         run: cargo test --all
 
-      # Publish in dependency order. `--allow-dirty` because the version bump above is an uncommitted
-      # working-tree edit (the tag, not the commit, is the source of truth). Modern cargo waits for
-      # each crate to appear in the index before returning; the sleeps are a belt-and-braces fallback.
-      - name: Publish ftrio-macros
-        run: cargo publish -p ftrio-macros --allow-dirty
-      - name: Wait for index
-        run: sleep 30
-      - name: Publish ftrio
-        run: cargo publish -p ftrio --allow-dirty
-      - name: Wait for index
-        run: sleep 30
-      - name: Publish ftrio-cli
-        run: cargo publish -p ftrio-cli --allow-dirty
+      # Publish in dependency order, idempotently. `--allow-dirty` because the version bump above is an
+      # uncommitted working-tree edit (the tag, not the commit, is the source of truth). If a crate's
+      # version is already on crates.io (e.g. this is a re-run after a later crate failed), that crate
+      # is skipped instead of failing the job. Modern cargo waits for each crate to appear in the
+      # index before returning; the sleeps are a belt-and-braces fallback for propagation lag.
+      - name: Publish to crates.io (ftrio-macros -> ftrio -> ftrio-cli)
+        run: |
+          publish() {
+            crate="$1"
+            if out=$(cargo publish -p "$crate" --allow-dirty 2>&1); then
+              printf '%s\n' "$out"
+              echo "published $crate $VERSION"
+            elif printf '%s' "$out" | grep -qiE 'already (exists|uploaded)'; then
+              printf '%s\n' "$out"
+              echo "::warning::$crate $VERSION already on crates.io; skipping"
+            else
+              printf '%s\n' "$out"
+              exit 1
+            fi
+          }
+          publish ftrio-macros
+          sleep 30
+          publish ftrio
+          sleep 30
+          publish ftrio-cli

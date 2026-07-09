@@ -15,7 +15,9 @@ name = "ftrio"
 path = "src/main.rs"
 
 [dependencies]
-ftrio = { path = "../ftrio" }
+# Version requirement is required to publish (the path is stripped, the version is used). It is kept
+# in lockstep with the workspace version by the publish workflow, like ftrio's pin on ftrio-macros.
+ftrio = { path = "../ftrio", version = "0.1.0" }
 clap.workspace = true
 serde_json.workspace = true
 ureq.workspace = true
